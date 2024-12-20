@@ -16,6 +16,22 @@ import com.example.entity.Message;
 
 import java.util.List;
 
+/*
+ * Class to create an object for the incoming meesage text to be able to deserialize the json into.
+ */
+class MessageUpdateRequest {
+    private String messageText;
+
+    // Getters and setters
+    public String getMessageText() {
+        return messageText;
+    }
+
+    public void setMessageText(String messageText) {
+        this.messageText = messageText;
+    }
+}
+
 /**
  * TODO: You will need to write your own endpoints and handlers for your controller using Spring. The endpoints you will need can be
  * found in readme.md as well as the test cases. You be required to use the @GET/POST/PUT/DELETE/etc Mapping annotations
@@ -33,8 +49,15 @@ public class SocialMediaController {
         this.messageService = messageService;
     }
 
+    @GetMapping("/accounts/{accountId}/messages")
+    public ResponseEntity getAllMessagesByAccountId(@PathVariable Integer accountId) {
+        List<Message> list = messageService.getAllMessagesByAccountId(accountId);
+        return ResponseEntity.status(200).body(list);
+    }
+
     @PatchMapping("/messages/{id}")
-    public ResponseEntity updateMessageById(@PathVariable Integer id, @RequestBody String messageText) {
+    public ResponseEntity updateMessageById(@PathVariable Integer id, @RequestBody MessageUpdateRequest request) {
+        String messageText = request.getMessageText();
         Boolean wasUpdated = messageService.updateMessageById(id, messageText);
         if (wasUpdated == false) {
             return ResponseEntity.status(400).body("Bad request.");    

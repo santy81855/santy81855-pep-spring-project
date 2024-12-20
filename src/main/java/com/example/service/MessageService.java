@@ -18,6 +18,10 @@ public class MessageService {
         this.accountRepository = accountRepository;
     }
 
+    public List<Message> getAllMessagesByAccountId(Integer accountId) {
+        return messageRepository.getMessagesByPostedBy(accountId);
+    }
+
     public Boolean updateMessageById(Integer id, String newText) {
         if (newText == null || newText.isEmpty() || newText.length() > 255) {
             return false;
